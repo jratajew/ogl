@@ -4,6 +4,7 @@
 #include "common3d.h"
 
 #include <fstream>  // TODO: Move to cpp later
+#include <list>
 //#include <unique_ptr>
 
 namespace Ngn3D
@@ -11,15 +12,11 @@ namespace Ngn3D
 
 class CShader
 {
-    enum { cMaxPath = 1024 };
-
-    GLuint  m_Shader;
-    bool    m_IsCompiled;
-
 public:
     CShader(GLenum type, const char* path)
         :   m_Shader(0),
-            m_IsCompiled(false)
+            m_IsCompiled(false),
+            m_FilePath(path)
     {
         // Check for path length:
         if( strnlen( path, cMaxPath ) == cMaxPath )
@@ -39,7 +36,7 @@ public:
         string shaderStr;
 
         // Open and read file:
-        ifstream sourceStream(path, ifstream::binary);
+        ifstream sourceStream(m_FilePath.c_str(), ifstream::binary);
         sourceStream.seekg(0, std::ios::end);
         int fileLen = static_cast<int>( sourceStream.tellg() );
         sourceStream.seekg(0);
@@ -91,14 +88,36 @@ public:
             glGetShaderiv(m_Shader, GL_INFO_LOG_LENGTH, &logSize );
             if( logSize > 0 )
             {
+            	using namespace std;
+
                 char* infoLog = new char[logSize];
                 glGetShaderInfoLog(m_Shader, logSize, NULL, infoLog);
-                std::string infoLogStr(infoLog);
+                string infoLogStr(infoLog);
                 delete [] infoLog;
-                throw infoLogStr.c_str();   // TODO: This might be wrong! Implement own exception for it!
+
+                cout << "Error during compilation of shader file \""
+                		<< m_FilePath << "\"\n";
+                cout << infoLogStr << endl;
+
+                throw "Shader compilation failed!";
             }
         }
     }
+private:
+    enum { cMaxPath = 1024 };
+/*
+    struct SUniform
+    {
+    	//static const GLuint scUndefinedLoc = 0xfefefefe;
+    	std::string Name;
+    	GLuint 		Location;
+    };
+*/
+    GLuint  m_Shader;
+    bool    m_IsCompiled;
+    //std::list<SUniform> m_Uniforms;
+
+    std::string m_FilePath;
 
 };
 

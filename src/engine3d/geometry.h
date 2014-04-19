@@ -5,8 +5,6 @@
 namespace Ngn3D
 {
 
-//#define CGEOMETRY_TEMPLATE_ARGS
-
 template <class TVertex, class TIndex = GLushort>
 class CGeometry
 {
@@ -120,10 +118,31 @@ public:
         program.Use();
         BindVertexBuffer( program.GetProgram() );
         BindIndexBuffer();
+
+        // Compute and set ModelView:
+        int locModelView = glGetUniformLocation(program.GetProgram(), "modelViewMatrix");
+
+        glm::mat4 mModelView = glm::lookAt(
+        		glm::vec3(10.0f, 10.0f, 10.0f), // eye
+        		glm::vec3(0.0f),				// look-at
+        		glm::vec3(0.0f, 1.0f, 0.0f) );	// up
+
+        static GLfloat sRotation = 0.0f;	// TODO: This is bad!
+        sRotation += 0.005f;
+        mModelView = glm::rotate(mModelView, sRotation, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        glUniformMatrix4fv(locModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
+
+        // Compute and set Projection:
+        int locProjection= glGetUniformLocation(program.GetProgram(), "projectionMatrix");
+
+        glm::mat4 mProjection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+        glUniformMatrix4fv(locProjection, 1, GL_FALSE, glm::value_ptr(mProjection));
+
         glDrawArrays(
             m_PrimitiveMode, 
             0,
-            m_Vertices.size() );
+            m_Indices.size() );
         // TODO: index type should be determined from TIndex
     }
     
@@ -157,6 +176,12 @@ public:
     
     //GLenum  GetPrimitiveMode() const { return m_PrimitiveMode; }
     void    SetPrimitiveMode( GLenum mode ) { m_PrimitiveMode = mode; }
+
+protected:
+    virtual void SetupUniforms()
+    {
+    	// Nothing to do...
+    }
 };
 
 } //namespace Ngn3D

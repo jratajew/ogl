@@ -10,3 +10,7 @@
 typedef unsigned char   ubyte;
 typedef unsigned short  ushort;
 typedef unsigned int    uint;
+
+using namespace std;
+
+std::vector<std::string> split(const std::string& str, char delim);

@@ -1,6 +1,9 @@
-varying highp vec4 vertexColor;
+#version 330
+
+smooth in vec4 vertexColor;
+out vec4 fragColor;
 
 void main()
 {
-	gl_FragColor = vertexColor;
+	fragColor = vertexColor;
 }

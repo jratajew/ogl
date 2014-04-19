@@ -7,6 +7,8 @@
 namespace Ngn3D
 {
 
+class CUniformValue;
+
 class CProgram
 {
     GLuint                  m_Program;
@@ -71,11 +73,34 @@ public:
     }
 
     template <class T>
-    void SetAttributePointer( char* name, T value )
+    void SetAttribute( char* name, T value )
     {
         int loc = glGetAttribLocation( m_Program, name );
         // TODO!
     }
+    /*
+    template <>
+    void SetAttribute<glm::mat4>( char* name, T value )
+    {
+        int loc = glGetAttribLocation( m_Program, name );
+        // TODO!
+    }*/
+};
+
+class CUniformValue
+{
+	std::string m_Name;
+	//GLuint m_Location;
+
+public:
+	CUniformValue(const char* name) :
+		m_Name(name)/*,
+		m_Location(0xfefefefe)*/
+	{
+
+	}
+
+	virtual void Update(CProgram& prog) = 0;
 };
 
 } //namespace Ngn3D

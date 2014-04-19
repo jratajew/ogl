@@ -24,23 +24,30 @@ public:
 		m_Triangle(),
 		m_TriangleProgram(NULL)
 	{
-	    glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );
-
 	    using namespace Ngn3D;
 
-	    CGeometryBuiler::BuildTriangle( m_Triangle );
-	    m_Triangle.CreateBuffers();
+	    try
+	    {
+	    	CGeometry<SColorVertex> obj;
+	    	CGeometryBuiler::BuildFormObj("resources\\cube.obj", obj);
+	    	CGeometryBuiler::BuildPyramid(m_Triangle);
+	    	m_Triangle.CreateBuffers();
 
-	    CShader* fShader = new CShader( GL_FRAGMENT_SHADER, "resources/shaders/basic.fsh" );
-	    CShader* vShader = new CShader( GL_VERTEX_SHADER, "resources/shaders/basic.vsh" );
+	    	CShader* fShader = new CShader( GL_FRAGMENT_SHADER, "resources/shaders/mvp.fsh" );
+	    	CShader* vShader = new CShader( GL_VERTEX_SHADER, "resources/shaders/mvp.vsh" );
 
-	    fShader->Compile();
-	    vShader->Compile();
+	    	fShader->Compile();
+	    	vShader->Compile();
 
-	    m_TriangleProgram = new CProgram();
-	    m_TriangleProgram->Attach( fShader );
-	    m_TriangleProgram->Attach( vShader );
-	    m_TriangleProgram->Link();
+	    	m_TriangleProgram = new CProgram();
+	    	m_TriangleProgram->Attach( fShader );
+	    	m_TriangleProgram->Attach( vShader );
+	    	m_TriangleProgram->Link();
+	    }
+	    catch(std::exception& ex)
+	    {
+	    	std::cerr << ex.what();
+	    }
 	}
 
 	~GfxContext()
@@ -101,10 +108,10 @@ int main(int argc, char** argv) {
 	std::cout << "!!!Hello World!!!" << std::endl; // prints !!!Hello World!!!
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowSize(500,500);
     glutInitWindowPosition(100,100);
-    glutCreateWindow("OpenGL - First window demo");
+    glutCreateWindow("OpenGL");
 
     GLenum err = glewInit();
     if (GLEW_OK != err)
@@ -123,10 +130,18 @@ int main(int argc, char** argv) {
     if (glewIsSupported("GL_VERSION_1_4  GL_ARB_point_sprite"))
     	std::cout << "Status: ARB point sprites available.\n";
 
-    g_pGfxContext = new GfxContext; // TODO: try catch
+    try
+    {
+		g_pGfxContext = new GfxContext; // TODO: try catch
 
-    glutDisplayFunc(renderFunction);
-    glutMainLoop();
+		glutDisplayFunc(renderFunction);
+		glutIdleFunc(renderFunction);
+		glutMainLoop();
+    }
+    catch(std::exception& ex)
+    {
+    	std::cout << ex.what();
+    }
 
 	return 0;
 }
