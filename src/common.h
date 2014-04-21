@@ -6,6 +6,7 @@
 #include <cassert>
 #include <exception>
 #include <vector>
+#include <iostream>
 
 typedef unsigned char   ubyte;
 typedef unsigned short  ushort;
