@@ -5,15 +5,16 @@
 namespace Ngn3D
 {
 
-template <class TVertex, class TIndex = GLushort>
+template <class TVertex, class TIndex = GLushort, class TNormal = float3>
 class CGeometry
 {
     GLuint m_VertexBuffer;
     GLuint m_IndexBuffer;
     GLenum m_PrimitiveMode;
 
-    std::vector<TVertex> m_Vertices;
-    std::vector<TIndex> m_Indices;
+    std::vector<TVertex>	m_Vertices;
+    std::vector<TIndex>		m_Indices;
+	std::vector<TNormal>	m_Normals;
 
 public:
     CGeometry() throw()

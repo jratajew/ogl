@@ -55,13 +55,13 @@ public:
 				// Vertex:
 				glm::vec4 vec(0.0f, 0.0f, 0.0f, 1.0f);
 				if(m[1].matched)
-					vec.x = atof(m[1].str().c_str());
+					vec.x = static_cast<float>( std::atof(m[1].str().c_str()) );
 				if(m[2].matched)
-					vec.y = atof(m[2].str().c_str());
+					vec.y = static_cast<float>( std::atof(m[2].str().c_str()) );
 				if(m[3].matched)
-					vec.z = atof(m[3].str().c_str());
+					vec.z = static_cast<float>( std::atof(m[3].str().c_str()) );
 				if(m[4].matched)
-					vec.w = atof(m[4].str().c_str());
+					vec.w = static_cast<float>( std::atof(m[4].str().c_str()) );
 				cout << "    Vertex found: " 
 					<< vec.x << " " << vec.y << " " << vec.z << " " << vec.w << "\n";
 
@@ -72,11 +72,11 @@ public:
 				// Normal:
 				glm::vec3 vec(0.0f, 0.0f, 0.0f);
 				if(m[1].matched)
-					vec.x = atof(m[1].str().c_str());
+					vec.x = static_cast<float>( std::atof(m[1].str().c_str()) );
 				if(m[2].matched)
-					vec.y = atof(m[2].str().c_str());
+					vec.y = static_cast<float>( std::atof(m[2].str().c_str()) );
 				if(m[3].matched)
-					vec.z = atof(m[3].str().c_str());
+					vec.z = static_cast<float>( std::atof(m[3].str().c_str()) );
 				cout << "    Normal found: " 
 					<< vec.x << " " << vec.y << " " << vec.z << "\n";
 			}
@@ -92,7 +92,7 @@ public:
 				// All faces should be triangles!
 				assert(splittedFace.size() == 4);
 
-				for( int i = 1; i < splittedFace.size(); i++ )
+				for( size_t i = 1; i < splittedFace.size(); i++ )
 				{
 					if(regex_match(splittedFace[i], regEx_FaceVertex))
 					{

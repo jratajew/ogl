@@ -29,7 +29,7 @@ public:
 	    //try
 	    {
 	    	CGeometry<SColorVertex> obj;
-	    	CGeometryBuiler::BuildFormObj("resources\\cube.obj", m_Triangle);
+	    	CGeometryBuiler::BuildFormObj("resources\\sphere.obj", m_Triangle);
 	    	//CGeometryBuiler::BuildPyramid(m_Triangle);
 	    	m_Triangle.CreateBuffers();
 			//obj.CreateBuffers();

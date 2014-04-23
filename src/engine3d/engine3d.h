@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "geometry.h"
 #include "geometrybuilder.h"
+#include "scene.h"
 
 namespace Ngn3D
 {

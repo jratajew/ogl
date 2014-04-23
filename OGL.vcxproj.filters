@@ -68,6 +68,15 @@
     <ClInclude Include="src\engine3d\types.h">
       <Filter>engine3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine3d\sceneobject.h">
+      <Filter>engine3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine3d\scene.h">
+      <Filter>engine3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine3d\camera.h">
+      <Filter>engine3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\cube.mtl">

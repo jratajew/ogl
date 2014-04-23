@@ -94,11 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine3d\camera.h" />
     <ClInclude Include="src\engine3d\common3d.h" />
     <ClInclude Include="src\engine3d\engine3d.h" />
     <ClInclude Include="src\engine3d\geometry.h" />
     <ClInclude Include="src\engine3d\geometrybuilder.h" />
     <ClInclude Include="src\engine3d\program.h" />
+    <ClInclude Include="src\engine3d\scene.h" />
+    <ClInclude Include="src\engine3d\sceneobject.h" />
     <ClInclude Include="src\engine3d\shader.h" />
     <ClInclude Include="src\engine3d\types.h" />
     <ClInclude Include="src\gfxContext.h" />
