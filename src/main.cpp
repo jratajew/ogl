@@ -26,12 +26,13 @@ public:
 	{
 	    using namespace Ngn3D;
 
-	    try
+	    //try
 	    {
 	    	CGeometry<SColorVertex> obj;
-	    	CGeometryBuiler::BuildFormObj("resources\\cube.obj", obj);
-	    	CGeometryBuiler::BuildPyramid(m_Triangle);
+	    	CGeometryBuiler::BuildFormObj("resources\\cube.obj", m_Triangle);
+	    	//CGeometryBuiler::BuildPyramid(m_Triangle);
 	    	m_Triangle.CreateBuffers();
+			//obj.CreateBuffers();
 
 	    	CShader* fShader = new CShader( GL_FRAGMENT_SHADER, "resources/shaders/mvp.fsh" );
 	    	CShader* vShader = new CShader( GL_VERTEX_SHADER, "resources/shaders/mvp.vsh" );
@@ -44,10 +45,10 @@ public:
 	    	m_TriangleProgram->Attach( vShader );
 	    	m_TriangleProgram->Link();
 	    }
-	    catch(std::exception& ex)
-	    {
-	    	std::cerr << ex.what();
-	    }
+	    //catch(std::exception& ex)
+	    //{
+	    //	std::cerr << ex.what();
+	    //}
 	}
 
 	~GfxContext()
@@ -140,7 +141,7 @@ int main(int argc, char** argv) {
     }
     catch(std::exception& ex)
     {
-    	std::cout << ex.what();
+    	std::cout << ex.what() << endl;
     }
 
 	return 0;

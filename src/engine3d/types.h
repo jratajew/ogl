@@ -2,57 +2,10 @@
 
 namespace Ngn3D
 {
+	
+typedef glm::vec3 float3;
 
-struct float3
-{
-    union
-    {
-        float r;
-        float x;
-    };
-    union
-    {
-        float g;
-        float y;
-    };
-    union
-    {
-        float b;
-        float z;
-    };
-
-    float3() {}
-    float3(float in_x, float in_y, float in_z)
-        : x(in_x), y(in_y), z(in_z) {}
-};
-
-struct float4
-{
-    union
-    {
-        float r;
-        float x;
-    };
-    union
-    {
-        float g;
-        float y;
-    };
-    union
-    {
-        float b;
-        float z;
-    };
-    union
-    {
-        float a;
-        float w;
-    };
-    
-    float4() {}
-    float4(float in_x, float in_y, float in_z, float in_w)
-        : x(in_x), y(in_y), z(in_z), w(in_w) {}
-};
+typedef glm::vec4 float4;
 
 // Need non-aligned packing for this to work correctly for all types:
 #pragma pack(push)

@@ -10,3 +10,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+struct Face
+{
+	enum { NOT_SET = 0xffff };
+
+	struct Vertex
+	{
+		ushort VertexId;
+		ushort CoordId;
+		ushort NormalId;
+
+		Vertex() : VertexId(NOT_SET), CoordId(NOT_SET), NormalId(NOT_SET) {}
+	};
+	std::vector<Vertex> Vertices;
+};

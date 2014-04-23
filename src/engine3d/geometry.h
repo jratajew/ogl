@@ -139,26 +139,15 @@ public:
         glm::mat4 mProjection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
         glUniformMatrix4fv(locProjection, 1, GL_FALSE, glm::value_ptr(mProjection));
 
-        glDrawArrays(
-            m_PrimitiveMode, 
-            0,
-            m_Indices.size() );
+		glDrawElements(
+		    m_PrimitiveMode, 
+		    m_Indices.size(), 
+		    GLType<TIndex>::type,
+		    (void*)(0) );
+
         // TODO: index type should be determined from TIndex
     }
     
-    void DrawIndexed( CProgram& program ) const
-    {
-        program.Use();
-        BindVertexBuffer( program.GetProgram() );
-        BindIndexBuffer();
-        glDrawElements(
-            m_PrimitiveMode, 
-            m_Indices.size(), 
-            GLType<TIndex>::type, 
-            (void*)(0) );
-        // TODO: index type should be determined from TIndex
-    }
-
     CGeometry& operator<< ( const TVertex& vertex )
     {
         m_Vertices.push_back( vertex );
