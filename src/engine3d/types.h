@@ -11,17 +11,17 @@ typedef glm::vec4 float4;
 #pragma pack(push)
 #pragma pack(1)
 
-struct SColorVertex
+struct CustomVertex
 {
-    float3 pos;
-    float4 color;
+    float3 Pos;
+	float3 Normal;
 
-    SColorVertex() 
+    CustomVertex() 
     {
     }
 
-    SColorVertex( float3 inPos, float4 inColor )
-        : pos( inPos ), color(inColor)
+    CustomVertex( float3 pos, float3 normal )
+        : Pos( pos ), Normal(normal)
     {
     }
 
@@ -29,7 +29,7 @@ struct SColorVertex
     {
         return static_cast<void*>( 0 );
     }
-    static void* GetColorOffset()
+    static void* GetNormalOffset()
     {
         return reinterpret_cast<void*>( sizeof(float3) );
     }

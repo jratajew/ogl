@@ -17,67 +17,7 @@
 #include "engine3d/engine3d.h"
 //#include <list>
 
-class GfxContext
-{
-public:
-	GfxContext() :
-		m_Triangle(),
-		m_TriangleProgram(NULL)
-	{
-	    using namespace Ngn3D;
-
-	    //try
-	    {
-	    	CGeometry<SColorVertex> obj;
-	    	CGeometryBuiler::BuildFormObj("resources\\sphere.obj", m_Triangle);
-	    	//CGeometryBuiler::BuildPyramid(m_Triangle);
-	    	m_Triangle.CreateBuffers();
-			//obj.CreateBuffers();
-
-	    	CShader* fShader = new CShader( GL_FRAGMENT_SHADER, "resources/shaders/mvp.fsh" );
-	    	CShader* vShader = new CShader( GL_VERTEX_SHADER, "resources/shaders/mvp.vsh" );
-
-	    	fShader->Compile();
-	    	vShader->Compile();
-
-	    	m_TriangleProgram = new CProgram();
-	    	m_TriangleProgram->Attach( fShader );
-	    	m_TriangleProgram->Attach( vShader );
-	    	m_TriangleProgram->Link();
-	    }
-	    //catch(std::exception& ex)
-	    //{
-	    //	std::cerr << ex.what();
-	    //}
-	}
-
-	~GfxContext()
-	{
-		if(m_TriangleProgram)
-			delete m_TriangleProgram;
-	}
-
-	void Paint()
-	{
-	    glClearColor(0.5f, 0.1f, 0.2f, 1.0f);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	    //m_TriangleProgram->Use();
-	    m_Triangle.Draw( *m_TriangleProgram );
-
-	    //glDrawArrays(GL_TRIANGLES, 0, 3 );
-	    //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)(0) );
-
-	    glutSwapBuffers();
-	}
-
-private:
-    typedef Ngn3D::CGeometry<Ngn3D::SColorVertex> CSimpleGeometry;
-    CSimpleGeometry m_Triangle;
-    Ngn3D::CProgram* m_TriangleProgram;
-};
-
-GfxContext* g_pGfxContext = nullptr;
+Ngn3D::GfxContext* g_pGfxContext = nullptr;
 
 /*
 static void error_callback(int error, const char* desc)
@@ -133,7 +73,7 @@ int main(int argc, char** argv) {
 
     try
     {
-		g_pGfxContext = new GfxContext; // TODO: try catch
+		g_pGfxContext = new Ngn3D::GfxContext; // TODO: try catch
 
 		glutDisplayFunc(renderFunction);
 		glutIdleFunc(renderFunction);

@@ -8,51 +8,52 @@ namespace Ngn3D
 template <class TVertex, class TIndex = GLushort, class TNormal = float3>
 class CGeometry
 {
-    GLuint m_VertexBuffer;
-    GLuint m_IndexBuffer;
-    GLenum m_PrimitiveMode;
-
-    std::vector<TVertex>	m_Vertices;
-    std::vector<TIndex>		m_Indices;
-	std::vector<TNormal>	m_Normals;
-
 public:
+	enum EDrawMode
+	{
+		DRAW_MODE_IMMEDIATE = 0,
+		DRAW_MODE_INDEXED,
+
+		DRAW_MODE_COUNT
+	};
+
     CGeometry() throw()
         :   m_VertexBuffer( 0 ),
             m_IndexBuffer( 0 ),
-            m_PrimitiveMode( GL_POINTS )
-    {
-    }
-
-    CGeometry( 
-        const std::vector<TVertex>& vertices, 
-        const std::vector<TIndex>& indices) throw()
-        :   m_VertexBuffer( 0 ),
-            m_IndexBuffer( 0 ),
             m_PrimitiveMode( GL_POINTS ),
-            m_Vertices( vertices ), 
-            m_Indices( indices )
+			m_DrawMode(DRAW_MODE_IMMEDIATE)
     {
     }
 
-    CGeometry( 
-        const TVertex* pVertices, 
-        const uint vertexCount, 
-        const TIndex* pIndices,
-        const uint indexCount )
-        :   m_VertexBuffer( 0 ),
-            m_IndexBuffer( 0 )
-    {
-        for( uint v = 0; v < vertexCount; v++ )
-        {
-            m_Vertices.push_back( pVertices[v] );
-        }
-        
-        for( uint i = 0; i < indexCount; i++ )
-        {
-            m_Indices.push_back( pIndices[i] );
-        }
-    }
+    //CGeometry( 
+    //    const std::vector<TVertex>& vertices, 
+    //    const std::vector<TIndex>& indices) throw()
+    //    :   m_VertexBuffer( 0 ),
+    //        m_IndexBuffer( 0 ),
+    //        m_PrimitiveMode( GL_POINTS ),
+    //        m_Vertices( vertices ), 
+    //        m_Indices( indices )
+    //{
+    //}
+
+    //CGeometry( 
+    //    const TVertex* pVertices, 
+    //    const uint vertexCount, 
+    //    const TIndex* pIndices,
+    //    const uint indexCount )
+    //    :   m_VertexBuffer( 0 ),
+    //        m_IndexBuffer( 0 )
+    //{
+    //    for( uint v = 0; v < vertexCount; v++ )
+    //    {
+    //        m_Vertices.push_back( pVertices[v] );
+    //    }
+    //    
+    //    for( uint i = 0; i < indexCount; i++ )
+    //    {
+    //        m_Indices.push_back( pIndices[i] );
+    //    }
+    //}
 
     ~CGeometry()
     {
@@ -101,12 +102,12 @@ public:
     void BindVertexBuffer( GLuint program ) const
     {
         int position_loc = glGetAttribLocation( program, "position" );
-        int color_loc = glGetAttribLocation( program, "color" );
+        int normal_loc = glGetAttribLocation( program, "color" );
         glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-        glVertexAttribPointer( position_loc, 3, GL_FLOAT, GL_FALSE, sizeof( SColorVertex ), SColorVertex::GetPositionOffset() );
+        glVertexAttribPointer( position_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetPositionOffset() );
         glEnableVertexAttribArray( position_loc );
-        glVertexAttribPointer( color_loc, 4, GL_FLOAT, GL_FALSE, sizeof( SColorVertex ), SColorVertex::GetColorOffset() );
-        glEnableVertexAttribArray( color_loc );
+        glVertexAttribPointer( normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetNormalOffset() );
+        glEnableVertexAttribArray( normal_loc );
     }
 
     void BindIndexBuffer() const
@@ -114,37 +115,48 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
     }
 
-    void Draw( CProgram& program ) const
+    void Draw( CProgram& program/*, glm::mat4 mView, glm::mat4 mProj*/ ) const
     {
-        program.Use();
         BindVertexBuffer( program.GetProgram() );
-        BindIndexBuffer();
 
-        // Compute and set ModelView:
-        int locModelView = glGetUniformLocation(program.GetProgram(), "modelViewMatrix");
+		if(m_DrawMode == DRAW_MODE_INDEXED)
+			BindIndexBuffer();
 
-        glm::mat4 mModelView = glm::lookAt(
-        		glm::vec3(10.0f, 10.0f, 10.0f), // eye
-        		glm::vec3(0.0f),				// look-at
-        		glm::vec3(0.0f, 1.0f, 0.0f) );	// up
+        //// Compute and set ModelView:
+        //int locModelView = glGetUniformLocation(program.GetProgram(), "modelViewMatrix");
 
-        static GLfloat sRotation = 0.0f;	// TODO: This is bad!
-        sRotation += 0.005f;
-        mModelView = glm::rotate(mModelView, sRotation, glm::vec3(0.0f, 1.0f, 0.0f));
+        //glm::mat4 mModelView = glm::lookAt(
+        //		glm::vec3(10.0f, 10.0f, 10.0f), // eye
+        //		glm::vec3(0.0f),				// look-at
+        //		glm::vec3(0.0f, 1.0f, 0.0f) );	// up
 
-        glUniformMatrix4fv(locModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
+        //static GLfloat sRotation = 0.0f;	// TODO: This is bad!
+        //sRotation += 0.005f;
+        //mModelView = glm::rotate(mModelView, sRotation, glm::vec3(0.0f, 1.0f, 0.0f));
 
-        // Compute and set Projection:
-        int locProjection= glGetUniformLocation(program.GetProgram(), "projectionMatrix");
+        //glUniformMatrix4fv(locModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
 
-        glm::mat4 mProjection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
-        glUniformMatrix4fv(locProjection, 1, GL_FALSE, glm::value_ptr(mProjection));
+        //// Compute and set Projection:
+        //int locProjection= glGetUniformLocation(program.GetProgram(), "projectionMatrix");
 
-		glDrawElements(
-		    m_PrimitiveMode, 
-		    m_Indices.size(), 
-		    GLType<TIndex>::type,
-		    (void*)(0) );
+        //glm::mat4 mProjection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+        //glUniformMatrix4fv(locProjection, 1, GL_FALSE, glm::value_ptr(mProjection));
+
+		if(m_DrawMode == DRAW_MODE_INDEXED)
+		{
+			glDrawElements(
+				m_PrimitiveMode, 
+				m_Indices.size(), 
+				GLType<TIndex>::type,
+				(void*)(0) );
+		}
+		else
+		{
+			glDrawArrays(
+				m_PrimitiveMode,
+				0,
+				m_Vertices.size());
+		}
 
         // TODO: index type should be determined from TIndex
     }
@@ -167,11 +179,24 @@ public:
     //GLenum  GetPrimitiveMode() const { return m_PrimitiveMode; }
     void    SetPrimitiveMode( GLenum mode ) { m_PrimitiveMode = mode; }
 
+	void SetDrawMode(EDrawMode mode) { m_DrawMode = mode; }
+
 protected:
     virtual void SetupUniforms()
     {
     	// Nothing to do...
     }
+	
+    GLuint m_VertexBuffer;
+    GLuint m_IndexBuffer;
+    GLenum m_PrimitiveMode;
+
+    std::vector<TVertex>	m_Vertices;
+    std::vector<TIndex>		m_Indices;
+	std::vector<TNormal>	m_Normals;
+
+	EDrawMode m_DrawMode;
+
 };
 
 } //namespace Ngn3D

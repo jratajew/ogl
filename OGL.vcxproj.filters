@@ -77,6 +77,9 @@
     <ClInclude Include="src\engine3d\camera.h">
       <Filter>engine3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine3d\light.h">
+      <Filter>engine3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\cube.mtl">
@@ -88,10 +91,10 @@
     <None Include="resources\shaders\basic.vsh">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="resources\shaders\mvp.fsh">
+    <None Include="resources\shaders\mvp.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="resources\shaders\mvp.vsh">
+    <None Include="resources\shaders\mvp.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

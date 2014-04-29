@@ -99,6 +99,7 @@
     <ClInclude Include="src\engine3d\engine3d.h" />
     <ClInclude Include="src\engine3d\geometry.h" />
     <ClInclude Include="src\engine3d\geometrybuilder.h" />
+    <ClInclude Include="src\engine3d\light.h" />
     <ClInclude Include="src\engine3d\program.h" />
     <ClInclude Include="src\engine3d\scene.h" />
     <ClInclude Include="src\engine3d\sceneobject.h" />
@@ -111,8 +112,8 @@
     <None Include="resources\cube.mtl" />
     <None Include="resources\shaders\basic.fsh" />
     <None Include="resources\shaders\basic.vsh" />
-    <None Include="resources\shaders\mvp.fsh" />
-    <None Include="resources\shaders\mvp.vsh" />
+    <None Include="resources\shaders\mvp.frag" />
+    <None Include="resources\shaders\mvp.vert" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="resources\cube.obj">
