@@ -1,10 +1,12 @@
 #pragma once
 
+#include "common3d.h"
+
 namespace Ngn3D
 {
 	
+typedef glm::vec2 float2;
 typedef glm::vec3 float3;
-
 typedef glm::vec4 float4;
 
 // Need non-aligned packing for this to work correctly for all types:
@@ -15,13 +17,14 @@ struct CustomVertex
 {
     float3 Pos;
 	float3 Normal;
+	float2 TexCoord;
 
     CustomVertex() 
     {
     }
 
-    CustomVertex( float3 pos, float3 normal )
-        : Pos( pos ), Normal(normal)
+    CustomVertex( float3 pos, float3 normal, float2 texCoord )
+        : Pos( pos ), Normal(normal), TexCoord(texCoord)
     {
     }
 
@@ -32,6 +35,10 @@ struct CustomVertex
     static void* GetNormalOffset()
     {
         return reinterpret_cast<void*>( sizeof(float3) );
+    }
+    static void* GetTexCoordOffset()
+    {
+        return reinterpret_cast<void*>( sizeof(float3) + sizeof(float3) );
     }
 };
 

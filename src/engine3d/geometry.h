@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common3d.h"
+#include "program.h"
 
 namespace Ngn3D
 {
@@ -103,11 +104,14 @@ public:
     {
         int position_loc = glGetAttribLocation( program, "position" );
         int normal_loc = glGetAttribLocation( program, "color" );
+        int texcoord_loc = glGetAttribLocation( program, "texCoord" );
         glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
         glVertexAttribPointer( position_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetPositionOffset() );
         glEnableVertexAttribArray( position_loc );
         glVertexAttribPointer( normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetNormalOffset() );
         glEnableVertexAttribArray( normal_loc );
+		glVertexAttribPointer( texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetTexCoordOffset() );
+        glEnableVertexAttribArray( texcoord_loc );
     }
 
     void BindIndexBuffer() const

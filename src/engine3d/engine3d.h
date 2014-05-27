@@ -14,75 +14,54 @@
 namespace Ngn3D
 {
 
+class TextureWrapper
+{
+public:    
+    TextureWrapper(GLuint name) : m_Name(name) 
+    {
+
+    }
+
+    ~TextureWrapper() 
+    { 
+        
+    }
+
+private:
+    GLuint m_Name;
+};
+
 class GfxContext
 {
 public:
-	GfxContext()
-		: m_TriangleProgram(nullptr)
-	{
-	    using namespace Ngn3D;
+	GfxContext();    
+	~GfxContext();
 
-	    //try
-	    {
-	    	auto cubeGeom = shared_ptr<CustomGeometry>(new CGeometry<CustomVertex>);
-			CGeometryBuiler::BuildFormObj("resources\\cube.obj", *cubeGeom);
-	    	cubeGeom->CreateBuffers();
-			auto cube = shared_ptr<DrawableObject>(new DrawableObject(cubeGeom));			
-			auto cube2 = shared_ptr<DrawableObject>(new DrawableObject(cubeGeom));
+    static GLuint GenTexture() 
+    {
+        GLuint texName = 0;
+        glGenTextures(1, &texName);
+        return texName;
+    }
 
-			cube2->Move(float3(0.0f, 3.0f, 0.0f));
+    static void DeleteTexture(GLuint name)
+    {
+        if(glIsTexture(name))
+            glDeleteTextures(1, &name);
+        name = 0;
+    }
 
-			m_Scene.AddDrawable(cube);
-			m_Scene.AddDrawable(cube2);
+    //Scene& Scene() { return m_Scene; }
 
-	    	CShader* fShader = new CShader( GL_FRAGMENT_SHADER, "resources/shaders/mvp.frag" );
-	    	CShader* vShader = new CShader( GL_VERTEX_SHADER, "resources/shaders/mvp.vert" );
+    static GLuint LoadTextureDDS(const char* filePath);
 
-	    	fShader->Compile();
-	    	vShader->Compile();
-
-	    	m_TriangleProgram = new CProgram();
-	    	m_TriangleProgram->Attach( fShader );
-	    	m_TriangleProgram->Attach( vShader );
-	    	m_TriangleProgram->Link();
-	    }
-	    //catch(std::exception& ex)
-	    //{
-	    //	std::cerr << ex.what();
-	    //}
-	}
-
-	~GfxContext()
-	{
-		if(m_TriangleProgram)
-			delete m_TriangleProgram;
-	}
-
-	void Paint()
-	{
-	    glClearColor(0.5f, 0.1f, 0.2f, 1.0f);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	    m_TriangleProgram->Use();
-
-		//glm::mat4 mModelView = glm::lookAt(
-  //      		glm::vec3(10.0f, 10.0f, 10.0f), // eye
-  //      		glm::vec3(0.0f),				// look-at
-  //      		glm::vec3(0.0f, 1.0f, 0.0f) );	// up
-
-		m_Scene.Draw(*m_TriangleProgram);
-	    //m_Triangle.Draw( *m_TriangleProgram );
-
-	    //glDrawArrays(GL_TRIANGLES, 0, 3 );
-	    //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)(0) );
-
-	    glutSwapBuffers();
-	}
+	void Paint();
 
 private:
     typedef Ngn3D::CGeometry<Ngn3D::CustomVertex> CSimpleGeometry;
-    Ngn3D::CProgram* m_TriangleProgram;
+    CProgram* m_TriangleProgram;
 	Scene m_Scene;
+    vector<GLuint> m_Textures;
 };
 
 } //namespace Ngn3D

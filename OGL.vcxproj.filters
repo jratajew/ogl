@@ -36,6 +36,9 @@
     <ClCompile Include="src\engine3d\shader.cpp">
       <Filter>engine3d</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine3d\geometrybuilder.cpp">
+      <Filter>engine3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h">
