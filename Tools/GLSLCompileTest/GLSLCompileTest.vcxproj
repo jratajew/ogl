@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{02BAC3BD-E51B-4176-BF0C-526C09BF13BA}</ProjectGuid>
+    <ProjectGuid>{937F92E9-960D-43D9-B6E3-8170DD372373}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>OGL</RootNamespace>
+    <RootNamespace>GLSLCompileTest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -51,10 +51,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(GL_LIBS_PATH)/include</AdditionalIncludeDirectories>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <DisableSpecificWarnings>4505</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src\engine3d;$(GL_LIBS_PATH)/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -62,12 +60,6 @@
       <AdditionalLibraryDirectories>$(GL_LIBS_PATH)/lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy *.dll $(Configuration)\</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Copying dll files...</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -77,10 +69,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(GL_LIBS_PATH)/include</AdditionalIncludeDirectories>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <DisableSpecificWarnings>4505</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src\engine3d;$(GL_LIBS_PATH)/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,43 +82,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\common.cpp" />
-    <ClCompile Include="src\engine3d\camera.cpp" />
-    <ClCompile Include="src\engine3d\engine3d.cpp" />
-    <ClCompile Include="src\engine3d\geometrybuilder.cpp" />
-    <ClCompile Include="src\engine3d\program.cpp" />
-    <ClCompile Include="src\engine3d\scene.cpp" />
-    <ClCompile Include="src\engine3d\sceneobject.cpp" />
-    <ClCompile Include="src\engine3d\shader.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="..\..\src\engine3d\shader.cpp" />
+    <ClCompile Include="glsl_ct.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\common.h" />
-    <ClInclude Include="src\engine3d\camera.h" />
-    <ClInclude Include="src\engine3d\common3d.h" />
-    <ClInclude Include="src\engine3d\engine3d.h" />
-    <ClInclude Include="src\engine3d\geometry.h" />
-    <ClInclude Include="src\engine3d\geometrybuilder.h" />
-    <ClInclude Include="src\engine3d\light.h" />
-    <ClInclude Include="src\engine3d\program.h" />
-    <ClInclude Include="src\engine3d\scene.h" />
-    <ClInclude Include="src\engine3d\sceneobject.h" />
-    <ClInclude Include="src\engine3d\shader.h" />
-    <ClInclude Include="src\engine3d\types.h" />
-    <ClInclude Include="src\gfxContext.h" />
-    <ClInclude Include="src\obj_parser.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources\cube.mtl" />
-    <None Include="resources\shaders\basic.fsh" />
-    <None Include="resources\shaders\basic.vsh" />
-    <None Include="resources\shaders\mvp.frag" />
-    <None Include="resources\shaders\mvp.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="resources\cube.obj">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Object>
+    <ClInclude Include="..\..\src\engine3d\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

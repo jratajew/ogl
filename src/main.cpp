@@ -18,39 +18,83 @@
 //#include <list>
 
 Ngn3D::GfxContext* g_pGfxContext = nullptr;
+KeyboardListener* g_pKeyboardListener = nullptr;
 
-/*
-static void error_callback(int error, const char* desc)
+class Timer
 {
-	std::cout << "Error " << error << ": " << desc << std::endl;
+public:
+    Timer()
+    {
+        ResetFrequency();
+        m_LastCount = CurrentCount();
+    }
+
+    double GetElapsedTime()
+    {
+        double currentCount = CurrentCount();
+        double elapsedTime = (currentCount - m_LastCount)/m_Freq;
+        m_LastCount = currentCount;
+        return elapsedTime;
+    }
+
+    void ResetFrequency()
+    {
+        LARGE_INTEGER liFreq;
+        QueryPerformanceFrequency(&liFreq);
+        m_Freq = double(liFreq.QuadPart);// / 1000.0;
+    }
+
+private:
+    double CurrentCount() 
+    {
+        LARGE_INTEGER liFreq;
+        QueryPerformanceCounter(&liFreq);
+        return static_cast<double>(liFreq.QuadPart);
+    }
+    double m_LastCount;
+    double m_Freq;
+};
+
+Timer g_Timer;
+
+void processNormalKeys(unsigned char key, int x, int y)
+{
+    if(g_pKeyboardListener)
+        g_pKeyboardListener->KeyDown(key, x, y);
 }
 
-static void key_callback(
-		GLFWwindow* window,
-		int key,
-		int scancode,
-		int action,
-		int mods)
+void processSpeciaKeys(int key, int x, int y)
 {
-	if(key == GLFW_KEY_ESCAPE && action==GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
+    if(g_pKeyboardListener)
+        g_pKeyboardListener->SpecialKeyDown(key, x, y);
 }
-*/
+
+void processNormalKeysUp(unsigned char key, int x, int y)
+{
+    if(g_pKeyboardListener)
+        g_pKeyboardListener->KeyUp(key, x, y);
+}
+
+void processSpeciaKeysUp(int key, int x, int y)
+{
+    if(g_pKeyboardListener)
+        g_pKeyboardListener->SpecialKeyUp(key, x, y);
+}
 
 void renderFunction()
 {
 	if(g_pGfxContext)
+    {
+        g_pGfxContext->Update(g_Timer.GetElapsedTime());
 		g_pGfxContext->Paint();
+    }
 }
 
 int main(int argc, char** argv) {
-	std::cout << "!!!Hello World!!!" << std::endl; // prints !!!Hello World!!!
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowSize(500,500);
+    glutInitWindowSize(800,600);
     glutInitWindowPosition(100,100);
     glutCreateWindow("OpenGL");
 
@@ -74,6 +118,12 @@ int main(int argc, char** argv) {
     try
     {
 		g_pGfxContext = new Ngn3D::GfxContext; // TODO: try catch
+        g_pKeyboardListener = &g_pGfxContext->GetCurrentScene();
+
+        glutKeyboardFunc(processNormalKeys);
+        glutSpecialFunc(processSpeciaKeys);
+        glutKeyboardUpFunc(processNormalKeysUp);
+        glutSpecialUpFunc(processSpeciaKeysUp);
 
 		glutDisplayFunc(renderFunction);
 		glutIdleFunc(renderFunction);

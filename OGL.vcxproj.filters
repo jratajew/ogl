@@ -39,6 +39,15 @@
     <ClCompile Include="src\engine3d\geometrybuilder.cpp">
       <Filter>engine3d</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine3d\sceneobject.cpp">
+      <Filter>engine3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine3d\camera.cpp">
+      <Filter>engine3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine3d\scene.cpp">
+      <Filter>engine3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h">

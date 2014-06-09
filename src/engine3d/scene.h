@@ -7,7 +7,7 @@
 namespace Ngn3D
 {
 
-class Scene
+class Scene : public KeyboardListener
 {
 	std::vector<shared_ptr<DrawableObject>> m_Drawables;
 	Camera m_Camera;
@@ -16,19 +16,15 @@ class Scene
 	//Light m_AmbientLight;
 	DirectionalLight m_DirLight;
 
+    bool m_KeyState[cMaxUByte];
+
 public:
-	Scene() : m_Camera() 
-	{
-		m_Camera.LookAt(
-        	glm::vec3(0.0f, 10.0f, 5.0f), // eye
-        	glm::vec3(0.0f),				// look-at
-        	glm::vec3(0.0f, 1.0f, 0.0f) );	// up
+	Scene();
 
-		//m_AmbientLight.SetColor(float3(0.3f, 0.3f, 0.3f));
-
-		//m_DirLight.SetColor(float3(1.0f, 0.3f, 0.3f));
-		//m_DirLight.
-	}
+    virtual void KeyDown(unsigned char key, int x, int y);
+    virtual void SpecialKeyDown(int key, int x, int y);
+    virtual void KeyUp(unsigned char key, int x, int y);
+    virtual void SpecialKeyUp(int key, int x, int y);
 
 	Camera& GetCamera() { return m_Camera; }
 
@@ -36,6 +32,15 @@ public:
 	{
 		m_Drawables.push_back(obj);
 	}
+
+    void Update(float dt)
+    {
+        m_Camera.Update(dt);
+        for(auto drawable : m_Drawables)
+        {
+            drawable->Update(dt);
+        }
+    }
 
 	void Draw(CProgram& program)
 	{

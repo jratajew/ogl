@@ -37,6 +37,16 @@ public:
 	GfxContext();    
 	~GfxContext();
 
+    inline Scene& GetCurrentScene()
+    {
+        return m_Scene;
+    }
+
+    inline const Scene& GetCurrentScene() const
+    {
+        return m_Scene;
+    }
+
     static GLuint GenTexture() 
     {
         GLuint texName = 0;
@@ -57,11 +67,19 @@ public:
 
 	void Paint();
 
+    void Update(double dt) 
+    { 
+        m_Dt = dt; 
+        m_Scene.Update(static_cast<float>(dt));
+    }
+
 private:
     typedef Ngn3D::CGeometry<Ngn3D::CustomVertex> CSimpleGeometry;
     CProgram* m_TriangleProgram;
 	Scene m_Scene;
     vector<GLuint> m_Textures;
+
+    double m_Dt;
 };
 
 } //namespace Ngn3D

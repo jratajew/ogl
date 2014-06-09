@@ -59,7 +59,7 @@ GLuint GfxContext::LoadTextureDDS(const char* filePath)
         return 0;
     }
 
-    gli::texture2D tex(gli::load_dds("resources/textures/test-rgb8-256b.dds"));
+    gli::texture2D tex(gli::load_dds(filePath));
     if(tex.empty())
     {
         DeleteTexture(texName);
