@@ -2,6 +2,7 @@
 
 #include "common3d.h"
 #include "program.h"
+#include "types.h"
 
 namespace Ngn3D
 {
@@ -102,10 +103,15 @@ public:
     // TODO: Temp?
     void BindVertexBuffer( GLuint program ) const
     {
+        // TODO: Error checks!
+
         int position_loc = glGetAttribLocation( program, "position" );
-        int normal_loc = glGetAttribLocation( program, "color" );
+        int normal_loc = glGetAttribLocation( program, "normal" );
         int texcoord_loc = glGetAttribLocation( program, "texCoord" );
+
+        assert(m_VertexBuffer != 0);
         glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+
         glVertexAttribPointer( position_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetPositionOffset() );
         glEnableVertexAttribArray( position_loc );
         glVertexAttribPointer( normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof( CustomVertex ), CustomVertex::GetNormalOffset() );
@@ -156,6 +162,7 @@ public:
 		}
 		else
 		{
+
 			glDrawArrays(
 				m_PrimitiveMode,
 				0,
@@ -202,5 +209,7 @@ protected:
 	EDrawMode m_DrawMode;
 
 };
+
+typedef CGeometry<CustomVertex> CustomGeometry;
 
 } //namespace Ngn3D

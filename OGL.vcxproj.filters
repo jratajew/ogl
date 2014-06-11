@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{185f9af2-46cc-4bc4-8eeb-b775937de6c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{13069520-c16c-409d-ba22-7449461fda66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp">
@@ -92,6 +95,9 @@
     <ClInclude Include="src\engine3d\light.h">
       <Filter>engine3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine3d\terrain.h">
+      <Filter>engine3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\cube.mtl">
@@ -114,5 +120,10 @@
     <Object Include="resources\cube.obj">
       <Filter>Resource Files</Filter>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\grass.dds">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

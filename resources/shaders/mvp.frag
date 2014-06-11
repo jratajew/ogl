@@ -35,4 +35,5 @@ void main()
 
 	//fragColor = diffuseFactor;
 	fragColor = texture(tex, fs_in.texCoord);
+	fragColor.x += fs_in.normal.x;
 }

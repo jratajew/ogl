@@ -18,7 +18,7 @@
 //#include <list>
 
 Ngn3D::GfxContext* g_pGfxContext = nullptr;
-KeyboardListener* g_pKeyboardListener = nullptr;
+InputListener* g_pInputListener = nullptr;
 
 class Timer
 {
@@ -59,26 +59,26 @@ Timer g_Timer;
 
 void processNormalKeys(unsigned char key, int x, int y)
 {
-    if(g_pKeyboardListener)
-        g_pKeyboardListener->KeyDown(key, x, y);
+    if(g_pInputListener)
+        g_pInputListener->KeyDown(key, x, y);
 }
 
 void processSpeciaKeys(int key, int x, int y)
 {
-    if(g_pKeyboardListener)
-        g_pKeyboardListener->SpecialKeyDown(key, x, y);
+    if(g_pInputListener)
+        g_pInputListener->SpecialKeyDown(key, x, y);
 }
 
 void processNormalKeysUp(unsigned char key, int x, int y)
 {
-    if(g_pKeyboardListener)
-        g_pKeyboardListener->KeyUp(key, x, y);
+    if(g_pInputListener)
+        g_pInputListener->KeyUp(key, x, y);
 }
 
 void processSpeciaKeysUp(int key, int x, int y)
 {
-    if(g_pKeyboardListener)
-        g_pKeyboardListener->SpecialKeyUp(key, x, y);
+    if(g_pInputListener)
+        g_pInputListener->SpecialKeyUp(key, x, y);
 }
 
 void renderFunction()
@@ -88,6 +88,39 @@ void renderFunction()
         g_pGfxContext->Update(g_Timer.GetElapsedTime());
 		g_pGfxContext->Paint();
     }
+}
+
+void processMouseButtons(int button, int state, int x, int y)
+{
+    InputListener::MouseButton mb = InputListener::MOUSE_BUTTON_COUNT;
+    switch(button)
+    {
+    case GLUT_LEFT_BUTTON:
+        mb = InputListener::MOUSE_BUTTON_LEFT;
+        break;
+    case GLUT_RIGHT_BUTTON:
+        mb = InputListener::MOUSE_BUTTON_RIGHT;
+        break;
+    case GLUT_MIDDLE_BUTTON:
+        mb = InputListener::MOUSE_BUTTON_MIDDLE;
+        break;
+    default:
+        return;
+    }
+
+    if(g_pInputListener)
+    {
+        if(state == GLUT_UP)
+            g_pInputListener->MouseButtonUp(mb, x, y);
+        else if(state == GLUT_DOWN)
+            g_pInputListener->MouseButtonDown(mb, x, y);
+    }
+}
+
+void processActiveMouseMotion(int x, int y)
+{
+    if(g_pInputListener)
+        g_pInputListener->MouseMotionActive(x, y);
 }
 
 int main(int argc, char** argv) {
@@ -118,12 +151,15 @@ int main(int argc, char** argv) {
     try
     {
 		g_pGfxContext = new Ngn3D::GfxContext; // TODO: try catch
-        g_pKeyboardListener = &g_pGfxContext->GetCurrentScene();
+        g_pInputListener = &g_pGfxContext->GetCurrentScene();
 
         glutKeyboardFunc(processNormalKeys);
         glutSpecialFunc(processSpeciaKeys);
         glutKeyboardUpFunc(processNormalKeysUp);
         glutSpecialUpFunc(processSpeciaKeysUp);
+
+        glutMouseFunc(processMouseButtons);
+        glutMotionFunc(processActiveMouseMotion);
 
 		glutDisplayFunc(renderFunction);
 		glutIdleFunc(renderFunction);

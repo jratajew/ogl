@@ -10,6 +10,7 @@ class CGeometryBuiler
 {
 public:
     static void BuildFormObj( const std::string& path, CGeometry<CustomVertex>& object );
+    static void BuildTerrainQuad( CustomGeometry& terrain, float width, float length );
 
 	//static void BuildTriangle( CGeometry<CustomVertex>& triangle )
  //   {

@@ -7,38 +7,39 @@
 namespace Ngn3D
 {
 
-class Scene : public KeyboardListener
+class Scene : public InputListener
 {
-	std::vector<shared_ptr<DrawableObject>> m_Drawables;
-	Camera m_Camera;
+	std::vector<shared_ptr<SceneObject>>    m_Objects;
+	shared_ptr<Camera>                      m_Camera;
+    shared_ptr<SceneObject>                 m_Terrain;
 
 	// Lights:
 	//Light m_AmbientLight;
 	DirectionalLight m_DirLight;
 
-    bool m_KeyState[cMaxUByte];
-
 public:
 	Scene();
 
-    virtual void KeyDown(unsigned char key, int x, int y);
-    virtual void SpecialKeyDown(int key, int x, int y);
-    virtual void KeyUp(unsigned char key, int x, int y);
-    virtual void SpecialKeyUp(int key, int x, int y);
+    virtual void KeyDownImpl(unsigned char key);
+    virtual void SpecialKeyDownImpl(int key);
+    virtual void KeyUpImpl(unsigned char key);
+    virtual void SpecialKeyUpImpl(int key);
+    virtual void MouseButtonDownImpl(MouseButton b);
+    virtual void MouseButtonUpImpl(MouseButton b);
+    virtual void MouseMoved();
 
-	Camera& GetCamera() { return m_Camera; }
+	Camera& GetCamera() { return *m_Camera; }
 
-	void AddDrawable(shared_ptr<DrawableObject> obj)
+	void Add(shared_ptr<SceneObject> obj)
 	{
-		m_Drawables.push_back(obj);
+		m_Objects.push_back(obj);
 	}
-
+    
     void Update(float dt)
     {
-        m_Camera.Update(dt);
-        for(auto drawable : m_Drawables)
+        for(auto obj : m_Objects)
         {
-            drawable->Update(dt);
+            obj->Update(dt);
         }
     }
 
@@ -47,8 +48,8 @@ public:
 		//m_Camera.Move(float3(0.01f, 0, 0));
 		//m_Camera.RotateY(0.0001f);
 
-		glm::mat4 mView = m_Camera.GetTransformMatrix();
-		glm::mat4 mProj = m_Camera.GetProjectionMatrix();
+		glm::mat4 mView = m_Camera->GetTransformMatrix();
+		glm::mat4 mProj = m_Camera->GetProjectionMatrix();
 		
 		// Compute and set Projection:
 		const int locProjection		= glGetUniformLocation(program.GetProgram(), "g_ProjectionMatrix");
@@ -58,18 +59,16 @@ public:
 		
 		m_DirLight.SetInProgram(program, mView);
 
-		for(auto drawable : m_Drawables)
+		for(auto obj : m_Objects)
 		{
-			drawable->RotateY(0.001f);
-			drawable->RotateZ(0.0005f);
+            if(obj->Attributes.Geometry)
+            {
+                // Compute and set ModelView:
+                glm::mat4 mModelView = mView * obj->GetTransformMatrix();
+                glUniformMatrix4fv(locModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
 
-			CustomGeometry& geom = drawable->GetGeometry();
-			
-			// Compute and set ModelView:
-			glm::mat4 mModelView = mView * drawable->GetTransformMatrix();
-			glUniformMatrix4fv(locModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
-
-			geom.Draw(program);
+                obj->Attributes.Geometry->Draw(program);
+            }
 		}
 	}
 };

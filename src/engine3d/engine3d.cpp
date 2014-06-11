@@ -10,19 +10,19 @@ namespace Ngn3D
 GfxContext::GfxContext() 
 : m_TriangleProgram(nullptr)
 {
-    using namespace Ngn3D;
-
     // TODO: Shouldn't be done in here! Move to client's code!
-    auto cubeGeom = shared_ptr<CustomGeometry>(new CGeometry<CustomVertex>);
-    CGeometryBuiler::BuildFormObj("resources\\cube.obj", *cubeGeom);
-    cubeGeom->CreateBuffers();
-    auto cube = shared_ptr<DrawableObject>(new DrawableObject(cubeGeom));
-    auto cube2 = shared_ptr<DrawableObject>(new DrawableObject(cubeGeom));
+
+    auto cubeGeom = LoadGeometryFromObj("resources\\cube.obj", "cube");
+
+    auto cube = shared_ptr<SceneObject>(new SceneObject());
+    auto cube2 = shared_ptr<SceneObject>(new SceneObject());
+    cube->Attributes.Geometry = cubeGeom;
+    cube2->Attributes.Geometry = cubeGeom;
 
     cube2->Move(float3(0.0f, 3.0f, 0.0f));
 
-    m_Scene.AddDrawable(cube);
-    m_Scene.AddDrawable(cube2);
+    m_Scene.Add(cube);
+    m_Scene.Add(cube2);
 
     CShader* fShader = new CShader(GL_FRAGMENT_SHADER, "resources/shaders/mvp.frag");
     CShader* vShader = new CShader(GL_VERTEX_SHADER, "resources/shaders/mvp.vert");
@@ -35,7 +35,7 @@ GfxContext::GfxContext()
     m_TriangleProgram->Attach(vShader);
     m_TriangleProgram->Link();
 
-    m_Textures.push_back(LoadTextureDDS("resources/textures/test-rgb8-256b.dds"));
+    m_Textures["grass"] = LoadTextureDDS("resources/textures/test-rgb8-256b.dds");
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -46,8 +46,8 @@ GfxContext::~GfxContext()
         delete m_TriangleProgram;
 
     // Release textures:
-    for(GLuint texName : m_Textures)
-        DeleteTexture(texName);
+    for(auto tex : m_Textures)
+        DeleteTexture(tex.second);
     m_Textures.clear();
 }
 

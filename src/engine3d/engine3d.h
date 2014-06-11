@@ -35,7 +35,20 @@ class GfxContext
 {
 public:
 	GfxContext();    
-	~GfxContext();
+
+    // path - path to wavefront obj file
+    shared_ptr<CustomGeometry> LoadGeometryFromObj(const char* path, const char* name)
+    {
+        CustomGeometry* pGeom = new CGeometry<CustomVertex>;
+        CGeometryBuiler::BuildFormObj(path, *pGeom);
+        pGeom->CreateBuffers();
+
+        auto shPtr = shared_ptr<CustomGeometry>(pGeom);
+        m_Geometries[name] = shPtr;
+        return shPtr;
+    }
+
+    ~GfxContext();
 
     inline Scene& GetCurrentScene()
     {
@@ -75,9 +88,11 @@ public:
 
 private:
     typedef Ngn3D::CGeometry<Ngn3D::CustomVertex> CSimpleGeometry;
+
     CProgram* m_TriangleProgram;
 	Scene m_Scene;
-    vector<GLuint> m_Textures;
+    map<string, GLuint> m_Textures;
+    map<string, shared_ptr<CustomGeometry>> m_Geometries;    
 
     double m_Dt;
 };

@@ -160,7 +160,7 @@ void CGeometryBuiler::BuildFormObj(const std::string& path, CGeometry<CustomVert
         {
             smooth = true;
 
-            // No vetex duplication needed if smooth is enabled:
+            // No vertex duplication needed if smooth is enabled:
 
         }
         else if(line == "s off")
@@ -168,6 +168,20 @@ void CGeometryBuiler::BuildFormObj(const std::string& path, CGeometry<CustomVert
             smooth = false;
         }
     }
+}
+
+void CGeometryBuiler::BuildTerrainQuad(CustomGeometry& terrain, float width, float length)
+{
+    float half_w = width / 2;
+    float half_l = length / 2;
+
+    terrain << CustomVertex(float3(-half_w, 0.0f, half_l), float3(0.0f, 1.0f, 0.0f), float2(0.0f, 0.0f))
+        << CustomVertex(float3(-half_w, 0.0f, -half_l), float3(0.0f, 1.0f, 0.0f), float2(0.0f, 1.0f))
+        << CustomVertex(float3(half_w, 0.0f, half_l), float3(0.0f, 1.0f, 0.0f), float2(1.0f, 0.0f))
+        << CustomVertex(float3(half_w, 0.0f, -half_l), float3(0.0f, 1.0f, 0.0f), float2(1.0f, 1.0f));
+
+    terrain.SetPrimitiveMode(GL_TRIANGLE_STRIP);
+    terrain.SetDrawMode(CustomGeometry::DRAW_MODE_IMMEDIATE);
 }
 
 }

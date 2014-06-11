@@ -48,4 +48,12 @@ void SceneObject::RotateZ(const float angle)
     m_TransformMatrix = glm::rotate(m_TransformMatrix, angle, float3(0.0f, 0.0f, 1.0f));
 }
 
+void SceneObject::Draw(CProgram& program)
+{
+    if(Attributes.Geometry)
+    {
+        Attributes.Geometry->Draw(program);
+    }
+}
+
 }

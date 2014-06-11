@@ -8,8 +8,6 @@
 namespace Ngn3D
 {
 
-typedef CGeometry<CustomVertex> CustomGeometry;
-
 class Camera;
 class Light;
 class SceneObserver;
@@ -20,9 +18,6 @@ public:
     struct SAttributes
     {
         shared_ptr<CustomGeometry>  Geometry;
-        shared_ptr<Camera>          Camera;
-        shared_ptr<Light>           Light;
-
     } Attributes;
 
 	SceneObject();
@@ -34,6 +29,8 @@ public:
     void RegisterObserver(SceneObserver* observer);
     void UnregisterObserver(SceneObserver* observer);
     void NotifyObservers() const;
+
+    void Draw(CProgram& program);
 	
 	const glm::mat4& GetTransformMatrix() const 
     { 
@@ -77,28 +74,6 @@ class SceneObserver
 {
 public:
     virtual bool Notify(SceneObject& subject) = 0;
-};
-
-
-class DrawableObject : public SceneObject
-{
-public:
-	DrawableObject(shared_ptr<CustomGeometry> geometry)
-		: m_pGeometry(geometry)
-	{
-	}
-
-	CustomGeometry& GetGeometry() { return *m_pGeometry; }
-
-	//void Draw();
-
-protected:
-
-	const shared_ptr<CustomGeometry> m_pGeometry;
-
-private:
-	DrawableObject(const DrawableObject&);
-	DrawableObject& operator=(const DrawableObject&);
 };
 
 }
